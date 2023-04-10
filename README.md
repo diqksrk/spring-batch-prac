@@ -39,3 +39,24 @@
 1) StepScope : @Bean Annotation과 함께 쓰이며, 이는 스텝의 실행범위나 잡의 실행범위로 들어갈때까지 빈의 생성을 지연시키는 것이다. 이렇게 함으로써, 늦은 바인딩 기능을 활용할수 있다.
 
 #### 잡 파라미터 유효성 검증하기.
+1) DefaultJobParameterValidator : fileName이 필수키이다.
+2) CompositeJobParameterValidator : 두개의 유효성 검증기를 사용할수 있게 해준다.
+3) org.springframework.batch.core.launch.support.RunIdIncrementer : 파라미터 run.id를 세팅해서, 하나씩 증가시키며 동일한 파라미터를 계속 실행할수 있게 해준다.
+4) JobParametersIncrementer : 매일 날짜를 이용해서 해야 하는경우면, 해당 인크리멘트를 상속해서 TimeStamp형식으로 날짜를 찍어내서 실행한다. - 즉, 자동화의 개념이다.
+
+#### 잡 리스너.
+1) 잡의 실행주기에 맞춰 잡이 끝났을 경우와 시작할경우에 뭔가의 조치를 취하기 위해서 하는 리스너이다.
+2) 전달받은 파라미터 변수로는 JobExecution을 전달받는다.
+3) Spring은 Annotation기반으로 모든일을 처리할수 있게끔 변화하고 있다. 따라서, 특정 Annotation을 덧붙인 후, FactoryBean에 넣어준다면 특정 리스너를 랩핑해서 잡에 넣어줄것이다.
+
+#### Execution Context
+![img.png](img.png)[
+1) Execution Context 가져오기 : 위에서 볼수 있듯이, Execution Contex]()t는 JobExecution이나 StepExecution의 일부이다.
+2) ExecutionContextPromotionListener를 통해 StepExecution안에 있는 파라미터를 JobExecution안의 파라미터로 복사를해 승격시킬수 있다.
+
+#### Step 알아보기
+1) 잡이 전체적인 처리를 담당한다면, 스텝은 잡의 구성 요소를 담당한다. 스텝은 독립적이고 순차적으로 배치 처리를 수행한다.
+
+
+* 원리 : 왜 뭔가의 Interface를 상속받고, 특정 메소드를 구현하면 실제 실행할때 그 메소드가 실행될수 있는가 ?
+* 답) 답은 다형성의 원리에 존재한다. 다형성으로써, 특정 인터페이스를 구현한 클래스를 Bean으로 생성하고 실제 로직에서 그 Bean객체의 특정 메소드를 호출한다. 그러므로 되는 것이다.
